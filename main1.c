@@ -9,7 +9,7 @@
 
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
-//funksioni per ngjyra
+//colour function
 
 void SetColor(int ForgC)
  {
@@ -27,7 +27,7 @@ void SetColor(int ForgC)
  }
  return;
 }
-//shkurtim
+//shortening
 void red(){
   SetColor(4);
 }
@@ -43,11 +43,10 @@ void black(){
 void lightgreen(){
   SetColor(10);
 }
-
+//check validity of completed sudoku
 int check(int s[9][9])
 {
 	int b, c, i, j, k, g, a=0;
-	//int s1=0, s2=0, s3=0, s4=0, s5=0, s6=0, s7=0, s8=0, s9=0, sv=0, sh=0;
 	for(i=0; i<9; i++)
 	{
 		for(j=0; j<9; j++)
@@ -94,7 +93,7 @@ int check(int s[9][9])
 	}
 	return a;
 }
-
+//shows the sudoku the way I structured it
 void printmatrix(int n[9][9])
 {
 	int i,j;
@@ -132,7 +131,7 @@ void printmatrix(int n[9][9])
 
 int main(int argc, char *argv[]) {
 	srand(time(NULL));
-	//matrica per ndihme 
+	//this 2D array is only for the help option, not to check validity
 	int m[9][9]={
 	{5,3,4,6,7,8,9,1,2},//0 1 4
 	{6,7,2,1,9,5,3,4,8},//0 3 4 5
@@ -144,7 +143,7 @@ int main(int argc, char *argv[]) {
 	{2,8,7,4,1,9,6,3,5},//3 4 5 8
 	{3,4,5,2,8,6,1,7,9} //4 8
 				}; 
-	//matrica kryesore
+	//this is the main 2D array the user will be able to modify
 	int n[9][9]={
 	{5,3,0,0,7,0,0,0,0},//0 1 4     0
 	{6,0,0,1,9,5,0,0,0},//0 3 4 5   1
@@ -156,23 +155,25 @@ int main(int argc, char *argv[]) {
 	{0,0,0,4,1,9,0,0,5},//3 4 5 8   7
 	{0,0,0,0,8,0,0,7,9} //4 7 8     8
 				};
-	
+	//a, b -> row, column | v -> value
 	int i,j,a,b,v;
+	//command serves to specify if input, remove input or get hint | count0 is to break command==3 while
 	int command,count0;
+	//test will be used as the return value of the 2D array validity function
 	int test=check(n);
 while(test>0)
-{	//vizualizim matrice + menu filestare
+{	//show 2D array + menu options
 	system("cls");
 	printmatrix(n);
 	printf("Continue - 1\nRemove - 2\nHint - 3\n");
 	scanf("%d",&command);
-	//kontrolli i vleres numerike
+	//check numerical value
 	while(command<1 || command>3)
 	{
 		printf("Give a number between 1 and 3\n");
 		scanf("%d",&command);
 	}
-	//fshirja e nje numri te dhene nga perdoruesi
+	//remove value
 	if(command==2)
 	{
 		printf("Give Row: ");
@@ -183,14 +184,14 @@ while(test>0)
 		{
 			n[a][b]=0;
 		}
-		//perdoruesi nuk fshin dot vlerat fillestare te matrices
+		//user should only be able to remove values they input
 		else
 		{
 			printf("This is a fixed value.");
 			Sleep(3000);
 		}
 	}
-	//hint ploteson nje vlere me pozicion random ne matrice
+	//hint fills a random blank
 	if(command==3)
 	{
 		int xa=(rand() % 9);
@@ -204,7 +205,7 @@ while(test>0)
 		}
 		n[xa][xb]=m[xa][xb]+10;
 	}
-	//dhenia e koordinatave dhe vleres per plotesim
+	//user input to fill a square of the sudoku
 	if(command==1)
 	{
 		system("cls");
@@ -215,25 +216,26 @@ while(test>0)
 		scanf("%d",&b);
 		printf("\nValue (1-9): ");
 		scanf("%d",&v);
-		//kontrolli i vleres numerike
+		//check numerical value
 		while(v<1 || v>9)
 		{
 			printf("\nGive a value between 1 and 9: ");
 			scanf("%d",&v);
 		}
-		//kontrolli nese eshte kuti boshe
+		//check if square is empty
 		if(n[a][b]==0)
 		{
 			n[a][b]=v+10;
 		}
-		//shenim: vlerat e marra nga perdoruesi ruhen me +10 qe te dallohen nga vlerat fikse dhe me pas afishohen me -10
-		//kjo per arsye se perdoruesi nuk duhet te fshije vlerat fikse, dhe per aplikimin e ngjyrave
+		//note: user inputs are saved with +10 to differentiate from fixed values then displayed with -10
+		//this so the user doesn't remove fixed values and also for colour coding the output
 		else
 		{
 			printf("There is a fixed value in this square.");
 			Sleep(4000);
 		}
 	}
+	//resetting command and updating test variable
 	command=0;
 	test=check(n);
 }
